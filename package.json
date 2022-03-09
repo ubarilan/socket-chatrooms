@@ -1,0 +1,36 @@
+{
+    "name": "socket-chatrooms",
+    "version": "1.0.0",
+    "description": "P2P Socket chatrooms",
+    "main": "dist/app.js",
+    "bin": {
+        "scr": "dist/app.js"
+    },
+    "scripts": {
+        "dev": "./node_modules/.bin/nodemon ./src/app.ts",
+        "build": "./node_modules/.bin/tsc -p .",
+        "start": "node ./dist/app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ubarilan/socket-chatrooms.git"
+    },
+    "keywords": [
+        "chatroom",
+        "socket",
+        "tcp",
+        "p2p"
+    ],
+    "author": "Uri Bar Ilan",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ubarilan/socket-chatrooms/issues"
+    },
+    "homepage": "https://github.com/ubarilan/socket-chatrooms#readme",
+    "devDependencies": {
+        "@types/node": "^17.0.21",
+        "nodemon": "^2.0.15",
+        "ts-node": "^10.7.0",
+        "typescript": "^4.6.2"
+    }
+}
