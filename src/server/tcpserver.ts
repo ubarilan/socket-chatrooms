@@ -18,7 +18,7 @@ export default class TCPServer {
     }
 
     private initServer() {
-        this.server = createServer(this.handleConnection());
+        this.server = createServer(this.handleConnection.bind(this));
 
         this.server.listen(
             {
@@ -31,32 +31,29 @@ export default class TCPServer {
         );
     }
 
-    private onData() {
-        return (data: Buffer) => {
-            console.log(data.toString().trimEnd());
-            this.connection.write(data);
-        };
+    private onData(data: Buffer) {
+        console.log(data.toString().trimEnd());
+        this.connection.write(data);
     }
 
-    private handleConnection() {
-        return (socket: Socket) => {
-            if (!this.connection) {
-                this.connection = socket;
-                socket.on('data', this.onData());
-                socket.on('error', (err) => {
-                    console.error(err);
-                    this.connection = null;
-                });
-                socket.on('end', this.handleClosedConnection);
+    private handleConnection(socket: Socket) {
+        if (!this.connection) {
+            this.connection = socket;
+            socket.on('data', this.onData.bind(this));
+            socket.on('error', (err) => {
+                console.error(err);
+                this.connection = null;
+            });
 
-                console.log(
-                    `Client connected to server from ${socket.remoteAddress}:${socket.remotePort}`
-                );
-            } else {
-                socket.write('Server already has a client connected\n');
-                socket.end();
-            }
-        };
+            socket.on('end', this.handleClosedConnection.bind(this));
+
+            console.log(
+                `Client connected to server from ${socket.remoteAddress}:${socket.remotePort}`
+            );
+        } else {
+            socket.write('Server already has a client connected\n');
+            socket.end();
+        }
     }
 
     public write(text: string): void {
