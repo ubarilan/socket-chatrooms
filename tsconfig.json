@@ -4,6 +4,8 @@
         "outDir": "./dist",
         "target": "es5",
         "module": "commonjs",
-        "removeComments": false
+        "removeComments": false,
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     }
 }

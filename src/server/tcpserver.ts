@@ -1,11 +1,12 @@
 import { createServer, Server, Socket } from 'net';
+import { validateServerOptions } from '../cli/utils';
 
 export interface TCPServerOptions {
     port?: number;
     host?: string;
 }
 
-export default class TCPServer {
+export class TCPServer {
     private port: number;
     private host: string;
     private server: Server;
@@ -29,6 +30,10 @@ export default class TCPServer {
                 console.log(`Server listening on ${this.host}:${this.port}`);
             }
         );
+    }
+
+    get isConnected() {
+        return this.connection !== null;
     }
 
     private onData(data: Buffer) {
@@ -64,4 +69,21 @@ export default class TCPServer {
         this.connection = null;
         console.log('Client disconnected');
     }
+}
+
+export default function runServer(options: TCPServerOptions): void {
+    function inputHandler(data: Buffer) {
+        if (tcpServer.isConnected) {
+            tcpServer.write(data.toString());
+        }
+    }
+
+    const serverOptionsValid = validateServerOptions(options);
+    if (serverOptionsValid !== true) {
+        console.log(serverOptionsValid);
+        process.exit(1);
+    }
+
+    const tcpServer = new TCPServer(options);
+    process.stdin.on('data', inputHandler);
 }
